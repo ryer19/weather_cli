@@ -1,7 +1,6 @@
-
 const yargs = require('yargs');
 const geocode = require('./geocode/geocode');
-
+const weather = require('./weather/weather')
 const argv = yargs
   .options({
     a: {
@@ -17,19 +16,28 @@ const argv = yargs
 
 
 let address = argv.a
-<<<<<<< HEAD
-<<<<<<< HEAD
-let latLong = geocode.geocodeAddress(address)
-=======
-=======
->>>>>>> d52d44b... switched from callback to promises for geocode api function
-geocode.geocodeAddress(address, ((errorMessage, results) => {
+// let latLong = geocode.geocodeAddress(address)
+
+// geocode.geocodeAddress(address, ((errorMessage, results) => {
+//   if (errorMessage) {
+//     console.log(errorMesage)
+//   } else {
+//     //console.log(JSON.stringify(results, undefined, 2))
+//     weather.getWeather(results, ((errorMessage, weatherResults) => console.log(`The temperature is ${weatherResults.temperature} but it feels like ${weatherResults.apparentTemperature}. It is ${weatherResults.experienceOfMoisture} outside.`
+//     )))
+//   }
+// }))
+
+geocode.geocodeAddress(address, (errorMessage, results) => {
   if (errorMessage) {
-    console.log(errorMesage)
+    console.log(errorMessage);
   } else {
-    //console.log(JSON.stringify(results, undefined, 2))
-    weather.getWeather(results, ((errorMessage, weatherResults) => console.log(`The temperature is ${weatherResults.temperature} but it feels like ${weatherResults.apparentTemperature}. It is ${weatherResults.experienceOfMoisture} outside.`
-    )))
+    weather.getWeather(results, (errorMessage, weatherResults) => {
+      if (errorMessage) {
+        console.log(errorMessage);
+      } else {
+        console.log(`It's currently ${weatherResults.temperature}. It feels like ${weatherResults.apparentTemperature}.`);
+      }
+    });
   }
-}))
->>>>>>> d52d44b... switched from callback to promises for geocode api function
+});
