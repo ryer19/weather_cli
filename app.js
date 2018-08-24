@@ -16,28 +16,11 @@ const argv = yargs
 
 
 let address = argv.a
-// let latLong = geocode.geocodeAddress(address)
+let location = geocode.geocodeAddress(address)
 
-// geocode.geocodeAddress(address, ((errorMessage, results) => {
-//   if (errorMessage) {
-//     console.log(errorMesage)
-//   } else {
-//     //console.log(JSON.stringify(results, undefined, 2))
-//     weather.getWeather(results, ((errorMessage, weatherResults) => console.log(`The temperature is ${weatherResults.temperature} but it feels like ${weatherResults.apparentTemperature}. It is ${weatherResults.experienceOfMoisture} outside.`
-//     )))
-//   }
-// }))
-
-geocode.geocodeAddress(address, (errorMessage, results) => {
-  if (errorMessage) {
-    console.log(errorMessage);
-  } else {
-    weather.getWeather(results, (errorMessage, weatherResults) => {
-      if (errorMessage) {
-        console.log(errorMessage);
-      } else {
-        console.log(`It's currently ${weatherResults.temperature}. It feels like ${weatherResults.apparentTemperature}.`);
-      }
-    });
-  }
-});
+location.then(results => weather.getWeather(results))
+  .then(res => {
+    let currentConditions = res.currently
+    let { temperature: temp, apparentTemperature: appTemp } = currentConditions;
+    console.log(`It's currently ${temp}. It feels like ${appTemp}.`)
+  })
